@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Juan Donoso / 002
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -103,8 +103,40 @@ public class Graph {
    */
   
   public int findRoot() {
+    if (numVertices == 0) {
+      return -1;
+    }
+
+    // Compute in-degrees for each vertex
+    int[] inDegree = new int[numVertices];
+
+    for (int src = 0; src < numVertices; src++) {
+      for (int dest : adjListArr[src]) {
+        inDegree[dest]++;
+      }
+    }
+
+    // Find vertex
+    int rootIndex = -1;
+    for (int i = 0; i < numVertices; i++) {
+      if (inDegree[i] == 0) {
+        // If we already found a root before, then it's not unique
+        if (rootIndex != -1) {
+          return -1;
+        }
+        rootIndex = i;
+      }
+    }
+
+    // If no root found, return -1
+    if (rootIndex == -1) {
+      return -1;
+    }
+
+    // Return the stored value for the unique root vertex
+    return vertexValues.get(rootIndex);
 
     // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME/SECTION AT TOP OF FILE
-    return -1;
+
   } 
 }
