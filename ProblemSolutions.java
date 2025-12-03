@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   ADD YOUR NAME / SECTION NUMBER HERE
+ *   Juan Donoso / 002
  *
  *   This java file contains the problem solutions of canFinish and
  *   numGroups methods.
@@ -79,10 +79,48 @@ class ProblemSolutions {
 
         // Build directed graph's adjacency list
         ArrayList<Integer>[] adj = getAdjList(numExams, 
-                                        prerequisites); 
+                                        prerequisites);
+        if (numExams <= 0) {
+            return true;
+        }
 
-        // ADD YOUR CODE HERE - ADD YOUR NAME / SECTION AT TOP OF FILE
-        return false;
+
+        int[] inDegree = new int[numNodes];
+
+        // Compute for each node
+        for (int u = 0; u < numNodes; u++) {
+            for (int v : adj[u]) {
+                inDegree[v]++;
+            }
+        }
+
+        Queue<Integer> queue = new LinkedList<>();
+
+
+        for (int i = 0; i < numNodes; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        int visitedCount = 0;
+
+        // Process nodes in topological order
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+            visitedCount++;
+
+            for (int v : adj[u]) {
+                inDegree[v]--;
+                if (inDegree[v] == 0) {
+                    queue.offer(v);
+                }
+            }
+        }
+        return visitedCount == numNodes;
+
+
+
 
     }
 
@@ -190,9 +228,38 @@ class ProblemSolutions {
             }
         }
 
-        // YOUR CODE GOES HERE - you can add helper methods, you do not need
-        // to put all code in this method.
-        return -1;
+        boolean[] visited = new boolean[numNodes];
+        int groups = 0;
+
+        // Traverse all nodes
+        for (int node = 0; node < numNodes; node++) {
+            if (!visited[node]) {
+                groups++;
+
+                // stack search
+                Deque<Integer> stack = new ArrayDeque<>();
+                stack.push(node);
+                visited[node] = true;
+
+                while (!stack.isEmpty()) {
+                    int current = stack.pop();
+
+                    List<Integer> neighbors = graph.get(current);
+                    if (neighbors == null) {
+                        continue;
+                    }
+
+                    for (int neighbor : neighbors) {
+                        if (!visited[neighbor]) {
+                            visited[neighbor] = true;
+                            stack.push(neighbor);
+                        }
+                    }
+                }
+            }
+        }
+
+        return groups;
     }
 
 }
